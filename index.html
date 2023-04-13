@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table,
+      tr,
+      th,
+      td {
+        border: 1px solid black;
+        padding: 5px;
+      }
+
+      table {
+        color: black;
+      }
+
+      thead {
+        color: black;
+      }
+      .box {
+        border: 1px solid black;
+        padding: 10px;
+        width: 200px;
+        height: 180px;
+        background-color: lightgray;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      
+  }
+  .bg{
+    width: 120px;
+    height: 190px;
+    background-color: black;
+  }
+  .container {
+  display: flex;
+}
+.box{
+  margin: 3px;
+}
+    </style>
+  </head>
+
+  <body>
+    <h1>BASO JAPRI</h1>
+    <p>SILAHKAN PESAN DISINI</p>
+    <hr>
+    <p>Nama pemesan :
+      <input id="nama" type="text" placeholder="Nama pemesan : " />
+    </p>
+    <div class="container">
+      <div class="box" id="pesan">
+        <div class="bg"></div>
+        <h5 id="pesan"></h5>
+        <p id="pesan"></p>
+        <button>SIMPAN</button>
+      </div>
+    </div>
+
+    <div class="container">
+        <div class="box" id="pesan">
+          <div class="bg"></div>
+          <h5 id="pesan"></h5>
+          <p id="pesan"></p>
+          <button>SIMPAN</button>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="box" id="pesan">
+          <div class="bg"></div>
+          <h5 id="pesan"></h5>
+          <p id="pesan"></p>
+          <button>SIMPAN</button>
+        </div>
+      </div>
+    <script src="./axios.min.js"></script>
+    <script>
+      
+    </script>
+    <h1>Daftar order</h1>
+    <p>DATA YANG TELAH LKAMU PILI</p>
+    <hr>
+    <div class="container">
+     <table style="margin-top: 10px" class="table table-bordered border-primary">
+      <thead>
+        <tr style="color: #000">
+          <th>No</th>
+          <th>Nama</th>
+          <th>Pesanan</th>
+          <th>Jumlah</th>
+          <th>Harga</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="pesan"></tbody>
+    </table>
+    <script src="./axios.min.js"></script>
+    <script>
+
+      const saveData = async () => {
+        let namaForm = document.getElementById("nama").value;
+        let orderForm = document.getElementById("order").value;
+        let countForm = document.getElementById("count").value;
+        let priceForm = document.getElementById("price").value;
+        let totalForm = document.getElementById("total").value;
+        let statusForm = document.getElementById("status").value;
+        await axios
+          .post(`http://localhost:3000/order`, {
+            nama: namaForm,
+            order: orderForm,
+            count: countForm,
+            price: priceForm,
+            total: totalForm,
+            status: statusForm,
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(response);
+          });
+      };
+      const deleteData = async (id) => {
+        let text = "Yakin akan menghapus data?";
+        if (confirm(text) == true) {
+          await axios
+            .delete(`http://localhost:3000/menu/${id}`)
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        }
+      };
+      
+      const getData = async () => {
+        await axios
+          .get(`http://localhost:3000/menu`)
+          .then((response) => {
+            let bucket = ``;
+            let menu = response.data;
+            console.log(menu);
+
+            if (menu.length > 0) {
+              for (let i = 0; i < menu.length; i++) {
+                bucket += `
+                <div class="box" id="pesan">
+                <div class="bg"></div>
+                <h5>${menu.nama}</h5>
+                <p>${menu.price}</p>
+                <button>Pesan</button>
+               `;
+              }
+            } else {
+              bucket += ` 
+              <tr>
+                <td colspan="7" style="text-align: center">Data Tidak Ditemukan</td>
+              </tr>`;
+            }
+
+            document.getElementById("pesan").innerHTML = bucket;
+          });
+      };
+      getData();
+    </script>
+  </body>
+</html>
